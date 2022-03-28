@@ -1,0 +1,1 @@
+/usr/bin/c++  -g   CMakeFiles/CPP_Notebook_B.dir/sources/Notebook.cpp.o  -o CPP_Notebook_B 
