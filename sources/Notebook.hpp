@@ -1,10 +1,13 @@
 #pragma once
 #include <iostream>
 #include "Direction.hpp"
+#include "Page.hpp"
 
 using namespace std;
 namespace ariel {
     class Notebook{
+    private:
+        unordered_map<int, page::Page*> notebook;
 
     public:
 
