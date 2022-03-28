@@ -5,6 +5,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
   "/mnt/c/Users/barak/Documents/GitHub/CPP_Notebook-B/sources/Notebook.cpp" "/mnt/c/Users/barak/Documents/GitHub/CPP_Notebook-B/cmake-build-debug/CMakeFiles/CPP_Notebook_B.dir/sources/Notebook.cpp.o"
+  "/mnt/c/Users/barak/Documents/GitHub/CPP_Notebook-B/sources/Page.cpp" "/mnt/c/Users/barak/Documents/GitHub/CPP_Notebook-B/cmake-build-debug/CMakeFiles/CPP_Notebook_B.dir/sources/Page.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "Clang")
 

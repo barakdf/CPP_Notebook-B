@@ -1,0 +1,24 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/mnt/c/Users/barak/Documents/GitHub/CPP_Notebook-B/sources/Direction.hpp
+
+/mnt/c/Users/barak/Documents/GitHub/CPP_Notebook-B/sources/Notebook.cpp
+iostream
+-
+unordered_map
+-
+Notebook.hpp
+/mnt/c/Users/barak/Documents/GitHub/CPP_Notebook-B/sources/Notebook.hpp
+
+/mnt/c/Users/barak/Documents/GitHub/CPP_Notebook-B/sources/Notebook.hpp
+iostream
+-
+Direction.hpp
+/mnt/c/Users/barak/Documents/GitHub/CPP_Notebook-B/sources/Direction.hpp
+

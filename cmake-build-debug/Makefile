@@ -150,6 +150,33 @@ sources/Notebook.cpp.s:
 	$(MAKE) -f CMakeFiles/CPP_Notebook_B.dir/build.make CMakeFiles/CPP_Notebook_B.dir/sources/Notebook.cpp.s
 .PHONY : sources/Notebook.cpp.s
 
+sources/Page.o: sources/Page.cpp.o
+
+.PHONY : sources/Page.o
+
+# target to build an object file
+sources/Page.cpp.o:
+	$(MAKE) -f CMakeFiles/CPP_Notebook_B.dir/build.make CMakeFiles/CPP_Notebook_B.dir/sources/Page.cpp.o
+.PHONY : sources/Page.cpp.o
+
+sources/Page.i: sources/Page.cpp.i
+
+.PHONY : sources/Page.i
+
+# target to preprocess a source file
+sources/Page.cpp.i:
+	$(MAKE) -f CMakeFiles/CPP_Notebook_B.dir/build.make CMakeFiles/CPP_Notebook_B.dir/sources/Page.cpp.i
+.PHONY : sources/Page.cpp.i
+
+sources/Page.s: sources/Page.cpp.s
+
+.PHONY : sources/Page.s
+
+# target to generate assembly for a file
+sources/Page.cpp.s:
+	$(MAKE) -f CMakeFiles/CPP_Notebook_B.dir/build.make CMakeFiles/CPP_Notebook_B.dir/sources/Page.cpp.s
+.PHONY : sources/Page.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -162,6 +189,9 @@ help:
 	@echo "... sources/Notebook.o"
 	@echo "... sources/Notebook.i"
 	@echo "... sources/Notebook.s"
+	@echo "... sources/Page.o"
+	@echo "... sources/Page.i"
+	@echo "... sources/Page.s"
 .PHONY : help
 
 

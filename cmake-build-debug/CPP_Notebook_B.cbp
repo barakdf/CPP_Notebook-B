@@ -90,6 +90,12 @@
 		<Unit filename="/mnt/c/Users/barak/Documents/GitHub/CPP_Notebook-B/sources/Notebook.hpp">
 			<Option target="CPP_Notebook_B"/>
 		</Unit>
+		<Unit filename="/mnt/c/Users/barak/Documents/GitHub/CPP_Notebook-B/sources/Page.cpp">
+			<Option target="CPP_Notebook_B"/>
+		</Unit>
+		<Unit filename="/mnt/c/Users/barak/Documents/GitHub/CPP_Notebook-B/sources/Page.hpp">
+			<Option target="CPP_Notebook_B"/>
+		</Unit>
 		<Unit filename="/mnt/c/Users/barak/Documents/GitHub/CPP_Notebook-B/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>

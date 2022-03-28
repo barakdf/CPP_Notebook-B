@@ -1,1 +1,1 @@
-/usr/bin/c++  -g   CMakeFiles/CPP_Notebook_B.dir/sources/Notebook.cpp.o  -o CPP_Notebook_B 
+/usr/bin/c++  -g   CMakeFiles/CPP_Notebook_B.dir/sources/Notebook.cpp.o CMakeFiles/CPP_Notebook_B.dir/sources/Page.cpp.o  -o CPP_Notebook_B 
