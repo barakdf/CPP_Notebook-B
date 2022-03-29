@@ -14,6 +14,14 @@ using namespace std;
 using namespace ariel;
 #define ERASED '~'
 
+void check_printable(const string& text) {
+    for (char i : text) {
+        if (i < 32 || i > 126) {
+            throw invalid_argument("Invalid Character!");
+        }
+    }
+}
+
 ariel::Notebook::~Notebook() {
     auto it = this->notebook.begin();
     while (it != this->notebook.end()) {
@@ -65,10 +73,10 @@ string ariel::Notebook::read(int page, int row, int collum, ariel::Direction dir
              * */
         case ariel::Direction::Vertical:
             for (int i = row; i < row + len; ++i) {
-                if (this->notebook.at(page)->page.find(i) == notebook.at(i)->page.end()) {
+                if (this->notebook.at(page)->page.find(i) == notebook.at(page)->page.end()) {
                     ans += '_';
                 } else {
-                    ans += this->notebook.at(page)->page.at(i).at((unsigned long) i);
+                    ans += this->notebook.at(page)->page.at(i).at((unsigned long) collum);
                 }
             }
             return ans;
@@ -83,6 +91,11 @@ void ariel::Notebook::write(int page, int row, int collum, ariel::Direction dire
         (direction == ariel::Direction::Horizontal && ((unsigned long) collum + text.size() > 100))) {
         throw std::invalid_argument("Invalid position in the notebook");
     }
+    if (text.find('~') != std::string::npos) {
+        throw std::invalid_argument("Invalid Character!");
+
+    }
+    check_printable(text);
     bool init_page = false;
     if (notebook.find(page) == notebook.end()) {
         notebook.insert({page, new page::Page});
@@ -125,6 +138,9 @@ void ariel::Notebook::erase(int page, int row, int collum, ariel::Direction dire
 }
 
 string ariel::Notebook::show(int page) {
+    if (page < 0) {
+        throw invalid_argument("Page must be positive!");
+    }
     return "";
 }
 
@@ -144,7 +160,7 @@ string ariel::Notebook::show(int page) {
 ////    free(test);
 ////    free(test2);
 //
-////    Notebook note;
+//    Notebook note;
 ////
 //////    note.write(0,0,1,Direction::Vertical,"OrelZamler");
 //////    note.write(500,0,1,Direction::Vertical,"OrelZamler");
@@ -175,12 +191,26 @@ string ariel::Notebook::show(int page) {
 //////        note.write(1,i-1,i,Direction::Vertical,"ab");
 ////    }
 //
-//    string test = " ";
-//    if (test.at(0) == ' ')
-//        cout << test.at(0) << endl;
-//    else {
-//        cout << "NO" << endl;
+////    string test = " ";
+////    if (test.at(0) == ' ')
+////        cout << test.at(0) << endl;
+////    else {
+////        cout << "NO" << endl;
+////    }
+////    note.write(1, 6, 0, Direction::Horizontal, "hello_hello");
+////    cout<<note.read(1,6,5,Direction::Horizontal,1)<<endl;
+////    note.write(1,6,5,Direction::Horizontal, "^");
+////    cout<<note.read(1,6,5,Direction::Horizontal,1)<<endl;
+////    note.write(1,7,5,Direction::Vertical,"ABCD");
+////    cout<<note.read(1,7,5,Direction::Vertical,4)<< endl;
+//    string s = "";
+//    for (size_t i = 0; i < 255; i++) {
+//        char c = i;
+//        s += c;
 //    }
+//    cout << s <<endl;
 //
+//    note.write(0,0,10,Direction::Vertical,"vertical test");
+//    cout<<note.read(0, 0, 10, Direction::Vertical, 13)<<endl;
 //
 //}

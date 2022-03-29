@@ -24,12 +24,7 @@ bool Page::row_write(int row, int col, const string &text, bool new_l) {
 //    this->page.at(row).replace((unsigned long) col, text.size(), text);
     unsigned long j = 0;
     for (int i = col; i < (unsigned long)col + text.size(); ++i) {
-        if (text.at(j) != ' ') {
-            this->page.at(row).at((unsigned long) i) = text.at(j);
-        } else {
-            j++;
-        }
-
+        this->page.at(row).at((unsigned long) i) = text.at(j++);
     }
     return true;
 }
