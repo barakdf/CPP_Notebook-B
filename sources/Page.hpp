@@ -9,7 +9,9 @@ namespace page {
     public:
         std::unordered_map<int, std::string> page;
 
-        void row_write(int row, int col, const std::string &text, bool new_l);
-        void col_write(int row, int col, const std::string &text, bool new_page);
+        bool row_write(int row, int col, const std::string &text, bool new_l);
+        bool col_write(int row, int col, const std::string &text, bool new_page);
+        void row_erase(int row, int col, int len, bool new_page);
+        void col_erase(int row, int col, int len, bool new_page);
     };
 }

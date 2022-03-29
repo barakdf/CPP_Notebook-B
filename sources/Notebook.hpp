@@ -10,6 +10,7 @@ namespace ariel {
         unordered_map<int, page::Page*> notebook;
 
     public:
+        ~Notebook();
 
         string read(int page, int row, int collum, Direction direction, int len);
 

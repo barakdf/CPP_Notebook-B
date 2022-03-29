@@ -15,10 +15,26 @@ unordered_map
 -
 Notebook.hpp
 /mnt/c/Users/barak/Documents/GitHub/CPP_Notebook-B/sources/Notebook.hpp
+Page.hpp
+/mnt/c/Users/barak/Documents/GitHub/CPP_Notebook-B/sources/Page.hpp
+exception
+-
+string
+-
 
 /mnt/c/Users/barak/Documents/GitHub/CPP_Notebook-B/sources/Notebook.hpp
 iostream
 -
 Direction.hpp
 /mnt/c/Users/barak/Documents/GitHub/CPP_Notebook-B/sources/Direction.hpp
+Page.hpp
+/mnt/c/Users/barak/Documents/GitHub/CPP_Notebook-B/sources/Page.hpp
+
+/mnt/c/Users/barak/Documents/GitHub/CPP_Notebook-B/sources/Page.hpp
+iostream
+-
+string
+-
+unordered_map
+-
 
