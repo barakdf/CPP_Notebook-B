@@ -12,34 +12,58 @@
 using namespace std;
 
 using namespace ariel;
-#define ERASED '~'
+/**
+ * store all the common const values.
+ * */
+constexpr int line_len = 100;
+constexpr int max_col = 99;
+constexpr int min_space = 0;
+constexpr int max_char_val = 125, min_char_val = 32;
 
+
+/**
+ * common function to check if the inputs is legal.
+ * case false - throw "invalid Argument".
+ * */
+void illegal_inputs_read_erase(int page, int row, int col, Direction direction, int len) {
+    if (page < min_space || row < min_space || col < min_space || col > max_col || len < 1 ||
+        (direction == ariel::Direction::Horizontal && (col + len > line_len))) {
+        throw std::invalid_argument("Invalid position in the notebook");
+    }
+}
+
+/**
+ * function to check if the text we try to write is contain illegal characters.
+ * case false - throw Invalid Argument.
+ * */
 void check_printable(const string& text) {
     for (char i : text) {
-        if (i < 32 || i > 126) {
+        if (i < min_char_val || i > max_char_val) {
             throw invalid_argument("Invalid Character!");
         }
     }
 }
 
+
+/**
+ * distructor for Notebook object,
+ * each page has Infinite possible rows, so they allocate in heap memory.
+ * we use the distructor to free all the allocated memory when the program ends.
+ * */
 ariel::Notebook::~Notebook() {
     auto it = this->notebook.begin();
     while (it != this->notebook.end()) {
         cout << it->first << "::" << it->second << endl;
-        free(it->second);
+        delete it->second;
         it++;
     }
 }
 
 string ariel::Notebook::read(int page, int row, int collum, ariel::Direction direction, int len) {
     /* check all the illegal inputs */
-    if (page < 0 || row < 0 || collum < 0 || collum > 99 || len < 1 ||
-        (direction == ariel::Direction::Horizontal && (collum + len > 100))) {
-        throw std::invalid_argument("Invalid position in the notebook");
-    }
+    illegal_inputs_read_erase(page,row,collum,direction,len);
     std::string ans;
     auto new_len = (unsigned long) (len - 1);
-    auto new_col = (unsigned long) collum;
     /* in case when we didn't init the requested page yet.
      * we can return blank page as default. */
     if (this->notebook.find(page) == this->notebook.end()) {
@@ -60,12 +84,10 @@ string ariel::Notebook::read(int page, int row, int collum, ariel::Direction dir
                 ans.append(new_len + 1, '_');
                 return ans;
             }
-//            ans = this->notebook.at(page)->page.at(row).substr((std::size_t) collum, new_len + new_col);
             for (int i = collum; i < collum + len; ++i) {
                 ans += this->notebook.at(page)->page.at(row).at((unsigned long) i);
             }
             return ans;
-            break;
             /*
              * if the direction is vertical we will iterate the rows at the specific collum
              * and check the existence of every row individual
@@ -80,21 +102,20 @@ string ariel::Notebook::read(int page, int row, int collum, ariel::Direction dir
                 }
             }
             return ans;
-            break;
     }
 }
 
 
 void ariel::Notebook::write(int page, int row, int collum, ariel::Direction direction, const string &text) {
     /* check all the illegal inputs */
-    if (page < 0 || row < 0 || collum < 0 || collum > 99 ||
-        (direction == ariel::Direction::Horizontal && ((unsigned long) collum + text.size() > 100))) {
+    if (page < min_space || row < min_space || collum < min_space || collum > max_col ||
+        (direction == ariel::Direction::Horizontal && ((unsigned long) collum + text.size() > line_len))) {
         throw std::invalid_argument("Invalid position in the notebook");
     }
-    if (text.find('~') != std::string::npos) {
-        throw std::invalid_argument("Invalid Character!");
-
-    }
+    /**
+     * check if the text contains illegal characters.
+     * for example: erase char ('~') is not allowed in writing
+     * */
     check_printable(text);
     bool init_page = false;
     if (notebook.find(page) == notebook.end()) {
@@ -117,10 +138,7 @@ void ariel::Notebook::write(int page, int row, int collum, ariel::Direction dire
 
 
 void ariel::Notebook::erase(int page, int row, int collum, ariel::Direction direction, int len) {
-    if (page < 0 || row < 0 || collum < 0 || collum > 99 || len < 1 ||
-        (direction == ariel::Direction::Horizontal && (collum + len > 100))) {
-        throw std::invalid_argument("Invalid position in the notebook");
-    }
+    illegal_inputs_read_erase(page,row,collum,direction,len);
     bool init_page = false;
     if (notebook.find(page) == notebook.end()) {
         notebook.insert({page, new page::Page});
@@ -141,26 +159,56 @@ string ariel::Notebook::show(int page) {
     if (page < 0) {
         throw invalid_argument("Page must be positive!");
     }
-    return "";
+    if (notebook.find(page) == notebook.end()) {
+        notebook.insert({page, new page::Page});
+        string new_line;
+        new_line.append(line_len,'_');
+        notebook.at(page)->page.insert({0,new_line});
+    }
+    string show_page = "   ";
+    string title = " page " + std::to_string(page) + " ";
+    show_page.append((line_len-title.size())/2, '=');
+    show_page.append(title);
+    show_page.append((line_len-title.size())/2, '=');
+    show_page += '\n';
+    int max_used_row = this->notebook.at(page)->page.begin()->first;
+    for (int i = 0; i <= max_used_row ; ++i) {
+        show_page.append(std::to_string(i)+": ");
+        if (this->notebook.at(page)->page.find(i) == notebook.at(page)->page.end()) {
+            show_page.append(line_len, '_');
+        } else {
+            show_page.append(this->notebook.at(page)->page.at(i));
+        }
+        show_page += "\n";
+    }
+    return show_page;
 }
 
+
+
+
+
+
 //int main() {
-////    unordered_map<int, page::Page*> m;
-////    auto *test = new page::Page;
-////    test->page.insert({0,"HI"});
-////    m.insert({0,test});
-////
+//    Notebook m;
+//    auto *test = new page::Page;
+//    m.write(4,0,0,Direction::Horizontal,"HI");
+//    m.write(4,5,0,Direction::Vertical,"Hello");
+//    m.erase(4,5,3,Direction::Horizontal,4);
+//
 ////    auto *test2 = new page::Page;
-////    test2->page.insert({0,"HI"});
-////    m.insert({3,test2});
+////    test->page.insert({6,"HI"});
+////    test->page.insert({9,"HI"});
+////    m.notebook.insert({0,test2});
 //
 //
 //
-////    cout<<m.at(0)->page.at(0)<<endl;
+////    cout<<m.notebook.at(0)->page.begin()->first<<endl;
+//    cout<< m.show(4)<<endl;
 ////    free(test);
 ////    free(test2);
 //
-//    Notebook note;
+////    Notebook note;
 ////
 //////    note.write(0,0,1,Direction::Vertical,"OrelZamler");
 //////    note.write(500,0,1,Direction::Vertical,"OrelZamler");
@@ -203,14 +251,14 @@ string ariel::Notebook::show(int page) {
 ////    cout<<note.read(1,6,5,Direction::Horizontal,1)<<endl;
 ////    note.write(1,7,5,Direction::Vertical,"ABCD");
 ////    cout<<note.read(1,7,5,Direction::Vertical,4)<< endl;
-//    string s = "";
-//    for (size_t i = 0; i < 255; i++) {
-//        char c = i;
-//        s += c;
-//    }
-//    cout << s <<endl;
-//
-//    note.write(0,0,10,Direction::Vertical,"vertical test");
-//    cout<<note.read(0, 0, 10, Direction::Vertical, 13)<<endl;
+////    string s = "";
+////    for (size_t i = 0; i < 255; i++) {
+////        char c = i;
+////        s += c;
+////    }
+////    cout << s <<endl;
+////
+////    note.write(0,0,10,Direction::Vertical,"vertical test");
+////    cout<<note.read(0, 0, 10, Direction::Vertical, 13)<<endl;
 //
 //}
