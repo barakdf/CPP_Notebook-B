@@ -1,11 +1,30 @@
 /**
  * Name = <Barak Dafna>, ID = <206795841>
+ *
+ * The algorithm of this project is implemented by the idea of using minimum space in memory,
+ * because of the no limit of pages and row, we create a new row only if it used to write or erase.
+ * write and erase are the only methods that 'leaves a mark' on the notebook, and therefore they need to store data.
+ *
+ * to deal with the missing data when trying to read or using show function,
+ * every row that does not exists we can complete with a known answer, meaning the row is init with '_' by default,
+ * and still not to store the row in the memory because the answer will stay the same.
+ * same for pages that does not exist.
+ *
+ * the data structure that used for this project is unordered_map (HashMap), that provides insert/access in O(1).
+ * unordered map is an comfort data structure to store a specific pages/rows without the need to maintenance a page/row order.
+ *
+ * the Notebook class provides the functions - read, write, erase, show,
+ * and keep unordered_map variable for every instance. each notebook(page_num, page_content).
+ * for more focused actions on each page i built a separate object for that (class Page).
+ * the class page will store unordered_map represent each page by (row_num -> row_content).
+ * the page is allocated in heap because of the possibility of large number of instances, and freed by Notebook distructor.
+ *
+ * the structure is build as : Notebook(key = int, value= Page) -- Page(key= int, value = string).
  * */
 
 #include <iostream>
 #include <unordered_map>
 #include "Notebook.hpp"
-#include "Page.hpp"
 #include <exception>
 #include <string>
 
@@ -60,20 +79,20 @@ ariel::Notebook::~Notebook() {
 }
 
 string ariel::Notebook::read(int page, int row, int collum, ariel::Direction direction, int len) {
-    /* check all the illegal inputs */
+    /** check all the illegal inputs */
     illegal_inputs_read_erase(page,row,collum,direction,len);
     std::string ans;
     auto new_len = (unsigned long) (len - 1);
-    /* in case when we didn't init the requested page yet.
+    /** in case when we didn't init the requested page yet.
      * we can return blank page as default. */
     if (this->notebook.find(page) == this->notebook.end()) {
         ans.append(new_len + 1, '_');
         return ans;
     }
-    /* we will approach each direction differently */
+    /** we will approach each direction differently */
 
     switch (direction) {
-        /*
+        /**
          * if the direction is Horizontal we will check if the specific row exists
          * if false: return simple '_' string.
          * if true: we will read the requested space in the row
@@ -88,7 +107,7 @@ string ariel::Notebook::read(int page, int row, int collum, ariel::Direction dir
                 ans += this->notebook.at(page)->page.at(row).at((unsigned long) i);
             }
             return ans;
-            /*
+            /**
              * if the direction is vertical we will iterate the rows at the specific collum
              * and check the existence of every row individual
              * if the specific row is missing, we simply add '_' to the string.
@@ -107,7 +126,7 @@ string ariel::Notebook::read(int page, int row, int collum, ariel::Direction dir
 
 
 void ariel::Notebook::write(int page, int row, int collum, ariel::Direction direction, const string &text) {
-    /* check all the illegal inputs */
+    /** check all the illegal inputs */
     if (page < min_space || row < min_space || collum < min_space || collum > max_col ||
         (direction == ariel::Direction::Horizontal && ((unsigned long) collum + text.size() > line_len))) {
         throw std::invalid_argument("Invalid position in the notebook");
@@ -117,11 +136,18 @@ void ariel::Notebook::write(int page, int row, int collum, ariel::Direction dire
      * for example: erase char ('~') is not allowed in writing
      * */
     check_printable(text);
+
+    /**
+     * if the page does not exists, we will allocate a new one in the notebook.*/
     bool init_page = false;
     if (notebook.find(page) == notebook.end()) {
         notebook.insert({page, new page::Page});
         init_page = true;
     }
+    /** each Direction will be handled differently.
+     * but in both ways we call a boolean function to write at the notebook.
+     * case return false: we throw "Invalid Argument".
+     * handle implementation is documented for each function in "Page.cpp" file.*/
     switch (direction) {
         case ariel::Direction::Horizontal:
             if (!this->notebook.at(page)->row_write(row, collum, text, init_page)) {
@@ -138,12 +164,18 @@ void ariel::Notebook::write(int page, int row, int collum, ariel::Direction dire
 
 
 void ariel::Notebook::erase(int page, int row, int collum, ariel::Direction direction, int len) {
+    /** check all the illegal inputs */
     illegal_inputs_read_erase(page,row,collum,direction,len);
     bool init_page = false;
+    /**
+     * if the page does not exists, we will allocate a new one in the notebook.*/
     if (notebook.find(page) == notebook.end()) {
         notebook.insert({page, new page::Page});
         init_page = true;
     }
+    /** each Direction will be handled differently.
+     * but in both ways we call a void function to erase the requested field in the notebook.
+     * handle implementation is documented for each function in "Page.cpp" file.*/
     switch (direction) {
         case ariel::Direction::Horizontal:
             this->notebook.at(page)->row_erase(row, collum, len, init_page);
@@ -156,21 +188,35 @@ void ariel::Notebook::erase(int page, int row, int collum, ariel::Direction dire
 }
 
 string ariel::Notebook::show(int page) {
+    /**
+     * check the parameter page to be valid.*/
     if (page < 0) {
         throw invalid_argument("Page must be positive!");
     }
+    /**
+     * by default, we determine that an empty page will show at least one row.*/
     if (notebook.find(page) == notebook.end()) {
         notebook.insert({page, new page::Page});
         string new_line;
         new_line.append(line_len,'_');
         notebook.at(page)->page.insert({0,new_line});
     }
+
+    /**
+     * insert title with page num.
+     * */
     string show_page = "   ";
     string title = " page " + std::to_string(page) + " ";
     show_page.append((line_len-title.size())/2, '=');
     show_page.append(title);
     show_page.append((line_len-title.size())/2, '=');
     show_page += '\n';
+
+    /**
+     * fill the return string with all the rows (up to the max written row) and their content (or blank).
+     * each row will presented with the number id of this row.
+     * (example: row 2 --> "2: ..._~~___hello___....")
+     * */
     int max_used_row = this->notebook.at(page)->page.begin()->first;
     for (int i = 0; i <= max_used_row ; ++i) {
         show_page.append(std::to_string(i)+": ");
